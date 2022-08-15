@@ -4,15 +4,15 @@ import { exec } from "child_process";
 import JSON5 from "json5";
 
 /*
-  options: {url: string, parameterString: string, isOutputOnly: boolean}
+  options: {url: string, rpcArgs: string, isOutputOnly: boolean}
 */
 export function toCurl(options) {
-  const { parameterString, url, isOutputOnly } = options;
+  const { rpcArgs, url, isOutputOnly } = options;
 
   const postData = {
     id: 1,
     jsonrpc: "2.0",
-    ...JSON5.parse(parameterString),
+    ...JSON5.parse(rpcArgs),
   };
 
   const command = `curl -s ${url} -X POST -H "Content-Type:application/json;" -d '${JSON.stringify(

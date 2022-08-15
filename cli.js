@@ -7,12 +7,12 @@ import dotenv from "dotenv";
 dotenv.config();
 const hostsString = process.env.TOCURL_HOSTS;
 
-let hosts = {
+let knownHosts = {
   localhost: "http://localhost:8545",
 };
 if (hostsString !== undefined) {
-  hosts = {
-    ...hosts,
+  knownHosts = {
+    ...knownHosts,
     ...JSON.parse(hostsString),
   };
 }
@@ -21,19 +21,18 @@ const command = new Command();
 
 command
   .option("-o|--output-only", "output CURL command only, don't execute.", false)
-  .option("-u|--url <string>", "RPC URL", hosts.localhost);
+  .option("-u|--url <string>", "RPC URL", knownHosts.localhost);
 command.parse();
 const options = command.opts();
 
 const isOutputOnly = options.outputOnly;
 let url = options.url;
-if (hosts[url]) {
-  url = hosts[url];
+if (knownHosts[url]) {
+  url = knownHosts[url];
 }
-const parameterString = command.args[0];
 
 toCurl({
   isOutputOnly,
-  parameterString,
+  rpcArgs: command.args[0],
   url,
 });
